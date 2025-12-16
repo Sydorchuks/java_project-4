@@ -1,6 +1,8 @@
 package com.example.personapi.controller;
 
 import com.example.personapi.model.Person;
+import com.example.personapi.model.Student;
+import com.example.personapi.model.Teacher;
 import com.example.personapi.service.PersonService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +18,44 @@ public class PersonController {
         this.service = service;
     }
 
+    /* ===== BASIC ===== */
+
     @GetMapping
     public List<Person> getAll() {
         return service.getAll();
     }
 
-    @PostMapping
-    public Person add(@RequestBody Person p) {
-        return service.add(p);
-    }
-
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.remove(id);
+    }
+
+    /* ===== STUDENTS ===== */
+
+    @PostMapping("/students")
+    public Student addStudent(@RequestBody Student student) {
+        return service.addStudent(student);
+    }
+
+    @GetMapping("/students/group/{group}")
+    public List<Student> getStudentsByGroup(@PathVariable String group) {
+        return service.getStudentsByGroup(group);
+    }
+
+    @GetMapping("/students/{id}/grades")
+    public List<Integer> getStudentGrades(@PathVariable Long id) {
+        return service.getStudentGrades(id);
+    }
+
+    /* ===== TEACHERS ===== */
+
+    @PostMapping("/teachers")
+    public Teacher addTeacher(@RequestBody Teacher teacher) {
+        return service.addTeacher(teacher);
+    }
+
+    @GetMapping("/teachers/subject/{subject}")
+    public List<Teacher> getTeachersBySubject(@PathVariable String subject) {
+        return service.getTeachersBySubject(subject);
     }
 }
