@@ -4,4 +4,5 @@ public class Person {
     public Long id;
     public String name;
     public int age;
+    public String type;
 }
