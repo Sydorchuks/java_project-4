@@ -163,7 +163,7 @@ public class PersonService {
     private Integer parseInt(Object obj) {
         if (obj == null) return null;
         if (obj instanceof Integer i) return i;
-        if (obj instanceof Long l) return (int) (long) l;
+        if (obj instanceof Long l) return l.intValue();;
         if (obj instanceof Double d) return (int) Math.floor(d);
         if (obj instanceof String s) {
             try { return Integer.parseInt(s.trim()); } catch (Exception ignored) { return null; }

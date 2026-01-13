@@ -28,10 +28,6 @@ public class PersonController {
         service.remove(id);
     }
 
-    @PostMapping("/students")
-    public Student addStudent(@RequestBody Student student) {
-        return service.addStudent(student);
-    }
 
     @GetMapping("/students/group/{group}")
     public List<Student> getStudentsByGroup(@PathVariable String group) {
@@ -41,11 +37,6 @@ public class PersonController {
     @GetMapping("/students/{id}/grades")
     public List<Integer> getStudentGrades(@PathVariable Long id) {
         return service.getStudentGrades(id);
-    }
-
-    @PostMapping("/teachers")
-    public Teacher addTeacher(@RequestBody Teacher teacher) {
-        return service.addTeacher(teacher);
     }
 
     @GetMapping("/teachers/subject/{subject}")
