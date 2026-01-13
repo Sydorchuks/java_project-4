@@ -96,4 +96,79 @@ public class PersonService {
                 .filter(t -> t.subject.equals(subject))
                 .collect(Collectors.toList());
     }
+
+    public Person addPerson(java.util.Map<String, Object> body) {
+        if (body == null) throw new IllegalArgumentException("There is nothing");
+
+        Object nameObj = body.get("name");
+        Object ageObj = body.get("age");
+
+        if (!(nameObj instanceof String) || ((String) nameObj).isBlank()) {
+            throw new IllegalArgumentException("Field 'name' is required");
+        }
+
+        Integer age = parseInt(ageObj);
+        if (age == null || age < 0) {
+            throw new IllegalArgumentException("Field 'age' must be a non-negative number");
+        }
+
+        boolean hasStudentFields = body.containsKey("group") || body.containsKey("grades");
+        boolean hasTeacherFields = body.containsKey("subject");
+
+        if (hasStudentFields && hasTeacherFields) {
+            throw new IllegalArgumentException("Ambiguous data: both student and teacher fields provided");
+        }
+
+        if (hasStudentFields) {
+            Student s = new Student();
+            s.name = (String) nameObj;
+            s.age = age;
+
+            Object groupObj = body.get("group");
+            if (!(groupObj instanceof String) || ((String) groupObj).isBlank()) {
+                throw new IllegalArgumentException("Field 'group' is required for student");
+            }
+            s.group = (String) groupObj;
+
+            s.grades.clear();
+            Object gradesObj = body.get("grades");
+            if (gradesObj instanceof java.util.List<?> list) {
+                for (Object x : list) {
+                    Integer g = parseInt(x);
+                    if (g == null) throw new IllegalArgumentException("Grades must be numbers");
+                    s.grades.add(g);
+                }
+            }
+
+            return addStudent(s);
+        }
+
+        if (hasTeacherFields) {
+            Teacher t = new Teacher();
+            t.name = (String) nameObj;
+            t.age = age;
+
+            Object subjectObj = body.get("subject");
+            if (!(subjectObj instanceof String) || ((String) subjectObj).isBlank()) {
+                throw new IllegalArgumentException("Field 'subject' is required for teacher");
+            }
+            t.subject = (String) subjectObj;
+
+            return addTeacher(t);
+        }
+
+        throw new IllegalArgumentException("Unknown person type: provide student fields (group/grades) or teacher field (subject)");
+    }
+
+    private Integer parseInt(Object obj) {
+        if (obj == null) return null;
+        if (obj instanceof Integer i) return i;
+        if (obj instanceof Long l) return (int) (long) l;
+        if (obj instanceof Double d) return (int) Math.floor(d);
+        if (obj instanceof String s) {
+            try { return Integer.parseInt(s.trim()); } catch (Exception ignored) { return null; }
+        }
+        return null;
+    }
+
 }

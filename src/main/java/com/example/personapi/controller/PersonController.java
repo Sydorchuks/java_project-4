@@ -18,8 +18,6 @@ public class PersonController {
         this.service = service;
     }
 
-    /* ===== BASIC ===== */
-
     @GetMapping
     public List<Person> getAll() {
         return service.getAll();
@@ -29,8 +27,6 @@ public class PersonController {
     public void delete(@PathVariable Long id) {
         service.remove(id);
     }
-
-    /* ===== STUDENTS ===== */
 
     @PostMapping("/students")
     public Student addStudent(@RequestBody Student student) {
@@ -47,8 +43,6 @@ public class PersonController {
         return service.getStudentGrades(id);
     }
 
-    /* ===== TEACHERS ===== */
-
     @PostMapping("/teachers")
     public Teacher addTeacher(@RequestBody Teacher teacher) {
         return service.addTeacher(teacher);
@@ -57,5 +51,10 @@ public class PersonController {
     @GetMapping("/teachers/subject/{subject}")
     public List<Teacher> getTeachersBySubject(@PathVariable String subject) {
         return service.getTeachersBySubject(subject);
+    }
+
+    @PostMapping
+    public Person addPerson(@RequestBody java.util.Map<String, Object> body) {
+        return service.addPerson(body);
     }
 }
